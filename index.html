@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>3D 출력 자동 견적기</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+    input, button { margin-top: 20px; padding: 10px; }
+    .result { font-size: 1.2em; margin-top: 20px; color: #2c3e50; }
+  </style>
+</head>
+<body>
+  <h1>3D 출력 자동 견적기</h1>
+  <p>STL 파일을 업로드하면 예상 가격을 계산합니다.</p>
+
+  <input type="file" id="fileInput" accept=".stl">
+  <div class="result" id="result"></div>
+
+  <script>
+    const pricePerKg = 22000; // 1kg = 22,000원
+
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const arrayBuffer = e.target.result;
+
+        // STL 파일 크기를 단순 계산 → 대략 무게 추정
+        // 실제로는 3D 모델 파싱 필요 (이건 단순 예시)
+        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        const estimatedWeightKg = (file.size / 1000000); // 1MB ≈ 1g 가정 (샘플 로직)
+        const estimatedPrice = (estimatedWeightKg * pricePerKg).toFixed(0);
+
+        document.getElementById('result').innerHTML =
+          `파일 크기: ${fileSizeMB} MB<br>
+           예상 무게: ${(estimatedWeightKg * 1000).toFixed(0)} g<br>
+           예상 가격: ${estimatedPrice} 원`;
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  </script>
+</body>
+</html>
